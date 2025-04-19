@@ -1,0 +1,88 @@
+{
+    "templateRepo": "https://github.com/Spooner8/dynamic-express-boilerplate.git",
+    "placeholders": [
+        {
+            "key": "__PROJECT_NAME__",
+            "question": "Projectname:",
+            "fileTargets": [
+                "package.json",
+                "README.md",
+                "nginx.conf"
+            ]
+        },
+        {
+            "key": "__DESCRIPTION__",
+            "question": "Description:",
+            "fileTargets": [
+                "package.json"
+            ]
+        },
+        {
+            "key": "__PORT__",
+            "question": "Port (z.B. 3000):",
+            "default": "3000",
+            "fileTargets": [
+                ".env"
+            ]
+        },
+        {
+            "key": "__DB_NAME__",
+            "question": "Database name:",
+            "default": "mydatabase",
+            "fileTargets": [
+                ".env"
+            ]
+        },
+        {
+            "key": "__RBAC__",
+            "question": "Want to activate Rolebased access controle? (true/false):",
+            "default": "false",
+            "fileTargets": [
+                ".env",
+                "api.env"
+            ]
+        },
+        {
+            "key": "__GOOGLE_AUTH__",
+            "question": "Want to activate Google Auth? (true/false):",
+            "default": "false",
+            "fileTargets": [
+                ".env",
+                "api.env"
+            ]
+        },
+        {
+            "key": "__COLLECT_METRICS__",
+            "question": "Want to activate metrics collection with prometheus/grafana? (true/false):",
+            "default": "false",
+            "fileTargets": [
+                ".env",
+                "api.env"
+            ]
+        },
+        {
+            "key": "__LAAS__",
+            "question": "Want to activate the Logger as a service? (true/false):",
+            "default": "false",
+            "fileTargets": [
+                ".env",
+                "api.env"
+            ]
+        },
+        {
+            "key": "__RATE_LIMITER__",
+            "question": "Want to activate the rate limiter? (true/false):",
+            "default": "true",
+            "fileTargets": [
+                ".env",
+                "api.env"
+            ]
+        },
+        {
+            "key": "__ESLINT__",
+            "question": "Want to use ESLint? (true/false):",
+            "default": "false",
+            "fileTargets": []
+        }
+    ]
+}

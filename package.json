@@ -1,0 +1,29 @@
+{
+  "name": "create-dynamic-express",
+  "version": "1.0.0",
+  "description": "Creates a new dynamic express api",
+  "homepage": "https://github.com/Spooner8/create-dynamic-express#readme",
+  "bugs": {
+    "url": "https://github.com/Spooner8/create-dynamic-express/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Spooner8/create-dynamic-express.git"
+  },
+  "license": "MIT",
+  "author": "Spooner8",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "create-express": "./index.js"
+  },
+  "dependencies": {
+    "fs-extra": "^11.1.1",
+    "inquirer": "^9.1.4",
+    "replace-in-file": "^7.0.1",
+    "simple-git": "^3.20.0"
+  }
+}
