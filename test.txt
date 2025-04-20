@@ -1,1 +1,0 @@
-__PROJECT_NAME__ is the name of the project.
