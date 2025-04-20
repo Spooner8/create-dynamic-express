@@ -5,17 +5,21 @@
             "key": "__PROJECT_NAME__",
             "question": "Projectname:",
             "default": "myproject",
+            "outputType": "string",
             "fileTargets": [
                 "package.json",
                 "README.md",
                 "nginx.conf",
-                "docker-compose.yaml"
+                "compose/default.yaml",
+                "compose/logger.yaml",
+                "compose/collect_metrics.yaml"
             ]
         },
         {
             "key": "__DESCRIPTION__",
             "question": "Description:",
             "default": "Flexible Express API",
+            "outputType": "string",
             "fileTargets": [
                 "package.json"
             ]
@@ -24,6 +28,7 @@
             "key": "__PORT__",
             "question": "Port (z.B. 3000):",
             "default": "3000",
+            "outputType": "number",
             "fileTargets": [
                 ".env",
                 "api.env",
@@ -34,16 +39,18 @@
             "key": "__DB_NAME__",
             "question": "Database name:",
             "default": "mydatabase",
+            "outputType": "string",
             "fileTargets": [
                 ".env",
                 "db.env",
-                "docker-compose.yaml"
+                "compose/default.yaml"
             ]
         },
         {
             "key": "__RBAC__",
             "question": "Activate Rolebased access controle? (yes/no):",
             "default": "no",
+            "outputType": "boolean",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -53,6 +60,7 @@
             "key": "__GOOGLE_AUTH__",
             "question": "Activate Google Auth? (yes/no):",
             "default": "no",
+            "outputType": "boolean",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -62,6 +70,7 @@
             "key": "__COLLECT_METRICS__",
             "question": "Activate metrics collection with prometheus/grafana? (yes/no):",
             "default": "no",
+            "outputType": "boolean",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -71,6 +80,7 @@
             "key": "__LAAS__",
             "question": "Activate the Logger as a service? (yes/no):",
             "default": "no",
+            "outputType": "boolean",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -80,6 +90,7 @@
             "key": "__RATE_LIMITER__",
             "question": "Activate the rate limiter? (yes/no):",
             "default": "yes",
+            "outputType": "boolean",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -89,6 +100,7 @@
             "key": "__ESLINT__",
             "question": "Want to use ESLint? (yes/no):",
             "default": "no",
+            "outputType": "boolean",
             "fileTargets": []
         }
     ]

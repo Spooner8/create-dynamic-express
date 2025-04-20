@@ -2,13 +2,20 @@ import fs from 'fs-extra';
 import path from 'path';
 
 export default async function cleanup(targetDir, answers) {
+    console.log('🗑️  Remove temporary Files...');
     let paths = {
         packageJsonPath: path.join(targetDir, 'package.json.template'),
         nginxConfPath: path.join(targetDir, 'nginx.conf.template'),
         envPath: path.join(targetDir, '.env.template'),
         apiEnvPath: path.join(targetDir, 'api.env.template'),
         dbEnvPath: path.join(targetDir, 'db.env.template'),
-        dockerComposePath: path.join(targetDir, 'docker-compose.template.yaml')
+        dockerComposePath: path.join(targetDir, 'docker-compose.template.yaml'),
+        envExamplePath: path.join(targetDir, '.env.example'),
+        apiEnvExamplePath: path.join(targetDir, 'api.env.example'),
+        dbEnvExamplePath: path.join(targetDir, 'db.env.example'),
+        readmePath: path.join(targetDir, 'README.md'),
+        licensePath: path.join(targetDir, 'LICENSE'),
+        dockerComposePath: path.join(targetDir, 'docker-compose.yaml'),
     };
 
     if (answers['__ESLINT__'] === 'false') {
@@ -20,6 +27,4 @@ export default async function cleanup(targetDir, answers) {
             await fs.remove(path);
         }
     }
-    
-    console.log('🗑️  Temporäre Dateien entfernt.');
 }

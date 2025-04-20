@@ -2,6 +2,8 @@ import path from 'path';
 import fs from 'fs-extra';
 
 export default async function cloneFiles(targetDir) {
+    console.log('🗂️  Clone Files...');
+
     const packageJsonTemplatePath = path.join(targetDir, 'package.json.template');
     const packageJsonTargetPath = path.join(targetDir, 'package.json');
     if (await fs.pathExists(packageJsonTemplatePath)) {
@@ -35,12 +37,5 @@ export default async function cloneFiles(targetDir) {
     if (await fs.pathExists(dbEnvTemplatePath)) {
         await fs.copy(dbEnvTemplatePath, dbEnvTargetPath);
         console.log('📝 db.env wurde erstellt aus db.env.template');
-    }
-
-    const dockerComposeTemplatePath = path.join(targetDir, 'docker-compose.template.yaml');
-    const dockerComposeTargetPath = path.join(targetDir, 'docker-compose.yaml');
-    if (await fs.pathExists(dockerComposeTemplatePath)) {
-        await fs.copy(dockerComposeTemplatePath, dockerComposeTargetPath);
-        console.log('📝 docker-compose.yaml wurde erstellt aus docker-compose.template.yaml');
     }
 }

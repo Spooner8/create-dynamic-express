@@ -1,18 +1,17 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-export default async function replacePlaceholders(config, targetDir, answers) {
-    answers['__PROJECT_NAME__'] = await prepareProjectName(config, answers);
-    answers = await replaceBooleanPlaceholders(answers);
+export async function replacePlaceholders(config, targetDir, answers) {
+    answers = await replaceBooleanPlaceholders(config, answers);
 
-    console.log('🔧 Ersetze Platzhalter...');
+    console.log('🔧 Replace placeholders...');
     for (const placeholder of config.placeholders) {
         for (const file of placeholder.fileTargets) {
             const filePath = path.join(targetDir, file);
 
             const fileExists = await fs.pathExists(filePath);
             if (!fileExists) {
-                console.warn(`⚠️ Datei ${filePath} nicht gefunden, Platzhalter konnte nicht ersetzt werden.`);
+                console.warn(`⚠️ File ${filePath} not found. Unable to replace placeholder.`);
                 continue;
             }
 
@@ -24,20 +23,37 @@ export default async function replacePlaceholders(config, targetDir, answers) {
     }
 }
 
-export async function prepareProjectName(config, answers) {
+export async function prepareProjectName(answers) {
     const projectName = answers['__PROJECT_NAME__'];
 
     const sanitizedProjectName = projectName.replace(/[^a-zA-Z0-9-_]/g, '-').toLowerCase();
     return answers['__PROJECT_NAME__'] = sanitizedProjectName;
 }
 
-async function replaceBooleanPlaceholders(answers) {
-    for (const key in answers) {
-        if (answers[key] === 'yes' || answers[key] === 'y') {
-            answers[key] = 'true';
-        } else if (answers[key] === 'no' || answers[key] === 'n') {
-            answers[key] = 'false';
+async function replaceBooleanPlaceholders(config, answers) {
+    for (const placeholder of config.placeholders) {
+        if (placeholder.outputType === 'boolean') {
+            const value = answers[placeholder.key].toLowerCase();
+            switch (value) {
+                case 'y':
+                    answers[placeholder.key] = 'true';
+                    break;
+                case 'yes':
+                    answers[placeholder.key] = 'true';
+                    break;
+                case 'n':
+                    answers[placeholder.key] = 'false';
+                    break;
+                case 'no':
+                    answers[placeholder.key] = 'false';
+                    break;
+                default:
+                    answers[placeholder.key] = placeholder.default || 'false';
+                    console.warn(`⚠️ Wrong value for ${placeholder.key}: ${value}. Default value "${answers[placeholder.key]}" will be used.`);
+                    break;
+            }
         }
     }
+    
     return answers;
 }
