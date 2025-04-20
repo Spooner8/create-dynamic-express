@@ -18,7 +18,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "create-express": "./index.js"
+    "create-dynamic-express": "./index.js"
   },
   "dependencies": {
     "fs-extra": "^11.1.1",

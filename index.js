@@ -4,10 +4,10 @@ import inquirer from 'inquirer';
 import simpleGit from 'simple-git';
 import fs from 'fs-extra';
 import path from 'path';
-import replace from 'replace-in-file';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import cloneFiles from './steps/clone-files';
+import replacePlaceholders, { prepareProjectName } from './steps/replace-placeholder.js';
+import cloneFiles from './steps/clone-files.js';
 import cleanup from './steps/cleanup.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,6 +26,7 @@ async function main() {
     }));
 
     const answers = await inquirer.prompt(prompts);
+    await prepareProjectName(config, answers);
     const targetDir = path.join(process.cwd(), answers['__PROJECT_NAME__']);
 
     console.log('\n📦 Klone Template...');
@@ -33,17 +34,9 @@ async function main() {
     await fs.remove(path.join(targetDir, '.git'));
 
     await cloneFiles(targetDir);
+    await replacePlaceholders(config, targetDir, answers);
 
-    console.log('🔧 Ersetze Platzhalter...');
-    for (const p of config.placeholders) {
-        const replaceOptions = {
-            files: p.fileTargets.map(f => path.join(targetDir, f)),
-            from: new RegExp(p.key, 'g'),
-            to: answers[p.key]
-        };
-        await replace.replaceInFile(replaceOptions);
-    }
-
+    console.log('🗑️  Entferne temporäre Dateien...');
     await cleanup(targetDir, answers);
 
     console.log('\n✅ Projekt erstellt unter:', targetDir);

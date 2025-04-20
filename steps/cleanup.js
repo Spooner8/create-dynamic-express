@@ -12,12 +12,14 @@ export default async function cleanup(targetDir, answers) {
     };
 
     if (answers['__ESLINT__'] === 'false') {
-        paths.eslintConfigPath = path.join(targetDir, '.eslint.config.js');
+        paths.eslintConfigPath = path.join(targetDir, 'eslint.config.js');
     }
 
-    for (path of paths) {
-        fs.pathExists(path) && fs.remove(path)
+    for (const path of Object.values(paths)) {
+        if (await fs.pathExists(path)) {
+            await fs.remove(path);
+        }
     }
-
+    
     console.log('🗑️  Temporäre Dateien entfernt.');
 }

@@ -4,15 +4,18 @@
         {
             "key": "__PROJECT_NAME__",
             "question": "Projectname:",
+            "default": "myproject",
             "fileTargets": [
                 "package.json",
                 "README.md",
-                "nginx.conf"
+                "nginx.conf",
+                "docker-compose.yaml"
             ]
         },
         {
             "key": "__DESCRIPTION__",
             "question": "Description:",
+            "default": "Flexible Express API",
             "fileTargets": [
                 "package.json"
             ]
@@ -22,7 +25,9 @@
             "question": "Port (z.B. 3000):",
             "default": "3000",
             "fileTargets": [
-                ".env"
+                ".env",
+                "api.env",
+                "nginx.conf"
             ]
         },
         {
@@ -30,13 +35,15 @@
             "question": "Database name:",
             "default": "mydatabase",
             "fileTargets": [
-                ".env"
+                ".env",
+                "db.env",
+                "docker-compose.yaml"
             ]
         },
         {
             "key": "__RBAC__",
-            "question": "Want to activate Rolebased access controle? (true/false):",
-            "default": "false",
+            "question": "Activate Rolebased access controle? (yes/no):",
+            "default": "no",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -44,8 +51,8 @@
         },
         {
             "key": "__GOOGLE_AUTH__",
-            "question": "Want to activate Google Auth? (true/false):",
-            "default": "false",
+            "question": "Activate Google Auth? (yes/no):",
+            "default": "no",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -53,8 +60,8 @@
         },
         {
             "key": "__COLLECT_METRICS__",
-            "question": "Want to activate metrics collection with prometheus/grafana? (true/false):",
-            "default": "false",
+            "question": "Activate metrics collection with prometheus/grafana? (yes/no):",
+            "default": "no",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -62,8 +69,8 @@
         },
         {
             "key": "__LAAS__",
-            "question": "Want to activate the Logger as a service? (true/false):",
-            "default": "false",
+            "question": "Activate the Logger as a service? (yes/no):",
+            "default": "no",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -71,8 +78,8 @@
         },
         {
             "key": "__RATE_LIMITER__",
-            "question": "Want to activate the rate limiter? (true/false):",
-            "default": "true",
+            "question": "Activate the rate limiter? (yes/no):",
+            "default": "yes",
             "fileTargets": [
                 ".env",
                 "api.env"
@@ -80,8 +87,8 @@
         },
         {
             "key": "__ESLINT__",
-            "question": "Want to use ESLint? (true/false):",
-            "default": "false",
+            "question": "Want to use ESLint? (yes/no):",
+            "default": "no",
             "fileTargets": []
         }
     ]
