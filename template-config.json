@@ -43,6 +43,7 @@
             "fileTargets": [
                 ".env",
                 "db.env",
+                "api.env",
                 "compose/default.yaml"
             ]
         },
