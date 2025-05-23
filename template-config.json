@@ -41,6 +41,7 @@
             "fileTargets": [
                 ".env",
                 "db.env",
+                "api.env",
                 "docker-compose.yaml"
             ]
         },
