@@ -35,9 +35,9 @@ async function main() {
     await fs.remove(path.join(targetDir, '.git'));
 
     await cloneFiles(targetDir);
-    await replacePlaceholders(config, targetDir, answers);
     await cleanup(targetDir, answers);
     await createNewFiles(targetDir, answers);
+    await replacePlaceholders(config, targetDir, answers);
 
     console.log('\n✅ Project created in:', targetDir);
     console.log(`\n📄 Next steps:\n  cd ${answers['__PROJECT_NAME__']} && npm install`);
