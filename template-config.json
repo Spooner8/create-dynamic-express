@@ -10,9 +10,7 @@
                 "package.json",
                 "README.md",
                 "nginx.conf",
-                "compose/default.yaml",
-                "compose/logger.yaml",
-                "compose/collect_metrics.yaml"
+                "docker-compose.yaml"
             ]
         },
         {
@@ -43,7 +41,7 @@
             "fileTargets": [
                 ".env",
                 "db.env",
-                "compose/default.yaml"
+                "docker-compose.yaml"
             ]
         },
         {
