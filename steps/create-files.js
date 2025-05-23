@@ -2,59 +2,85 @@ import fs from 'fs-extra';
 import yaml from 'js-yaml';
 import path from 'path';
 
+async function loadYamlIfExists(filePath) {
+    if (await fs.pathExists(filePath)) {
+        return yaml.load(await fs.readFile(filePath, 'utf-8'));
+    }
+    return {};
+}
+
 async function createComposeFile(targetDir, answers) {
     const baseFilePath = path.join(targetDir, 'compose/default.yaml');
-    const additionalFiles = [];
+    let compose = await loadYamlIfExists(baseFilePath);
 
-    const userSelections = {
-        collectMetrics: answers['__COLLECT_METRICS__'] === 'true',
-        logger: answers['__LAAS__'] === 'true',
-    };
-    
-    if (userSelections.collectMetrics) {
-        additionalFiles.push('compose/collect_metrics.yaml');
-    }
-    if (userSelections.logger) {
-        additionalFiles.push('compose/logger.yaml');
-    }
-    
-    // Ausgabe-Datei definieren
-    const outputFile = path.join(targetDir, 'docker-compose.yaml');
-    const baseContent = yaml.load(await fs.readFile(baseFilePath, 'utf-8'));
+    // Services
+    compose.services = {};
+    const servicesDir = path.join(targetDir, 'compose/services');
+    let serviceFiles = await fs.readdir(servicesDir);
+    serviceFiles = serviceFiles.filter((f) => f.endsWith('.yaml'));
 
-    // Lade und füge zusätzliche Dateien hinzu (z. B. collect_metrics.yaml, logger.yaml)
-    for (const file of additionalFiles) {
-        const filePath = path.join(targetDir, file);
-        if (await fs.pathExists(filePath)) {
-            const additionalContent = yaml.load(await fs.readFile(filePath, 'utf-8'));
+    const skipIfNoMetrics = ['grafana', 'prometheus'];
+    const skipIfNoLaas = ['logger'];
 
-            Object.assign(baseContent.services, additionalContent);
-
-            if (additionalContent.volumes) {
-                baseContent.volumes = {
-                    ...baseContent.volumes,
-                    ...additionalContent.volumes,
-                };
-            }
-
-            if (additionalContent.networks) {
-                baseContent.networks = {
-                    ...baseContent.networks,
-                    ...additionalContent.networks,
-                };
-            }
-        } else {
-            console.warn(`⚠️ File ${filePath} not found. Skipping.`);
+    for (const file of serviceFiles) {
+        const name = file.replace('.yaml', '');
+        if (
+            (skipIfNoMetrics.includes(name) &&
+                answers['__COLLECT_METRICS__'] !== 'true') ||
+            (skipIfNoLaas.includes(name) && answers['__LAAS__'] !== 'true')
+        ) {
+            continue;
         }
+        const serviceFile = path.join(servicesDir, file);
+        const serviceContent = await loadYamlIfExists(serviceFile);
+        Object.assign(compose.services, serviceContent.services);
     }
 
-    const mergedContent = JSON.stringify(baseContent);
-    const replacedContent = Object.keys(answers).reduce((content, key) => {
-        const regex = new RegExp(`__${key}__`, 'g');
-        return content.replace(regex, answers[key]);
-    }, mergedContent);
+    // Volumes
+    compose.volumes = {};
+    const volumeDir = path.join(targetDir, 'compose/volumes');
+    let volumeFiles = await fs.readdir(volumeDir);
+    volumeFiles = volumeFiles.filter((f) => f.endsWith('.yaml'));
+    
+    for (const file of volumeFiles) {
+        const name = file.replace('.yaml', '');
+        if (
+            (skipIfNoMetrics.includes(name) &&
+                answers['__COLLECT_METRICS__'] !== 'true') ||
+            (skipIfNoLaas.includes(name) && answers['__LAAS__'] !== 'true')
+        ) {
+            continue;
+        }
+        const volumeFile = path.join(volumeDir, file);
+        const volumeContent = await loadYamlIfExists(volumeFile);
+        Object.assign(compose.volumes, volumeContent.volumes);
+    }
 
-    await fs.writeFile(outputFile, yaml.dump(JSON.parse(replacedContent)), 'utf-8');
+    // Networks
+    compose.networks = {};
+    const networkDir = path.join(targetDir, 'compose/networks');
+    let networkFiles = await fs.readdir(networkDir);
+    networkFiles = networkFiles.filter((f) => f.endsWith('.yaml'));
+    for (const file of networkFiles) {
+        const name = file.replace('.yaml', '');
+        if (
+            (skipIfNoMetrics.includes(name) &&
+                answers['__COLLECT_METRICS__'] !== 'true') ||
+            (skipIfNoLaas.includes(name) && answers['__LAAS__'] !== 'true')
+        ) {
+            continue;
+        }
+        const networkFile = path.join(networkDir, file);
+        const networkContent = await loadYamlIfExists(networkFile);
+        Object.assign(compose.networks, networkContent.networks);
+    }
+
+    const outputFile = path.join(targetDir, 'docker-compose.yaml');
+    await fs.writeFile(
+        outputFile,
+        yaml.dump(compose),
+        'utf-8'
+    );
 }
 
 export default async function createNewFiles(targetDir, answers) {
