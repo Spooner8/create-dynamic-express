@@ -2,8 +2,6 @@ import fs from 'fs-extra';
 import path from 'path';
 
 export async function replacePlaceholders(config, targetDir, answers) {
-    answers = await replaceBooleanPlaceholders(config, answers);
-
     console.log('🔧 Replace placeholders...');
     for (const placeholder of config.placeholders) {
         for (const file of placeholder.fileTargets) {
@@ -30,7 +28,7 @@ export async function prepareProjectName(answers) {
     return answers['__PROJECT_NAME__'] = sanitizedProjectName;
 }
 
-async function replaceBooleanPlaceholders(config, answers) {
+export async function replaceBooleanPlaceholders(config, answers) {
     for (const placeholder of config.placeholders) {
         if (placeholder.outputType === 'boolean') {
             const value = answers[placeholder.key].toLowerCase();

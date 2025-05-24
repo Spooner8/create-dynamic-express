@@ -6,9 +6,9 @@ import fs from 'fs-extra';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { prepareProjectName, replacePlaceholders } from './steps/replace-placeholder.js';
+import { prepareProjectName, replaceBooleanPlaceholders, replacePlaceholders } from './steps/replace-placeholder.js';
 import cloneFiles from './steps/clone-files.js';
-import cleanup from './steps/cleanup.js';
+import { removeTempFiles, removeTempFolders} from './steps/cleanup.js';
 import createNewFiles from './steps/create-files.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,8 +26,9 @@ async function main() {
         default: p.default || undefined
     }));
 
-    const answers = await inquirer.prompt(prompts);
-    await prepareProjectName(answers);
+    let answers = await inquirer.prompt(prompts);
+    answers['__PROJECT_NAME__'] = await prepareProjectName(answers);
+    answers = await replaceBooleanPlaceholders(config, answers);
     const targetDir = path.join(process.cwd(), answers['__PROJECT_NAME__']);
 
     console.log('\n📦 Clone Template...');
@@ -35,8 +36,9 @@ async function main() {
     await fs.remove(path.join(targetDir, '.git'));
 
     await cloneFiles(targetDir);
-    await cleanup(targetDir, answers);
+    await removeTempFiles(targetDir, answers);
     await createNewFiles(targetDir, answers);
+    await removeTempFolders(targetDir);
     await replacePlaceholders(config, targetDir, answers);
 
     console.log('\n✅ Project created in:', targetDir);
