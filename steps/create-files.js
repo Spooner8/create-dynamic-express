@@ -9,7 +9,8 @@ async function loadYamlIfExists(filePath) {
     return {};
 }
 
-async function createComposeFile(targetDir, answers) {
+export default async function createComposeFile(targetDir, answers) {
+    console.log('📝 Creating Docker Compose file...');
     const baseFilePath = path.join(targetDir, 'compose/default.yaml');
     let compose = await loadYamlIfExists(baseFilePath);
 
@@ -34,7 +35,10 @@ async function createComposeFile(targetDir, answers) {
         const serviceFile = path.join(servicesDir, file);
         const serviceContent = await loadYamlIfExists(serviceFile);
         Object.assign(compose.services, serviceContent.services);
+
+        console.log(`🐳 Service ${name} added to compose file.`);
     }
+    
 
     // Volumes
     compose.volumes = {};
@@ -54,6 +58,8 @@ async function createComposeFile(targetDir, answers) {
         const volumeFile = path.join(volumeDir, file);
         const volumeContent = await loadYamlIfExists(volumeFile);
         Object.assign(compose.volumes, volumeContent.volumes);
+
+        console.log(`🐳 Volume ${name} added to compose file.`);
     }
 
     // Networks
@@ -73,6 +79,8 @@ async function createComposeFile(targetDir, answers) {
         const networkFile = path.join(networkDir, file);
         const networkContent = await loadYamlIfExists(networkFile);
         Object.assign(compose.networks, networkContent.networks);
+
+        console.log(`🐳 Network ${name} added to compose file.`);
     }
 
     const outputFile = path.join(targetDir, 'docker-compose.yaml');
@@ -81,13 +89,6 @@ async function createComposeFile(targetDir, answers) {
         yaml.dump(compose),
         'utf-8'
     );
-}
 
-export default async function createNewFiles(targetDir, answers) {
-    console.log('📝 Create new Files...');
-    const readmeTargetPath = path.join(targetDir, 'README.md');
-    const readmeContent = `# ${answers['__PROJECT_NAME__']}\n`;
-    await fs.writeFile(readmeTargetPath, readmeContent, 'utf-8');
-
-    await createComposeFile(targetDir, answers);
+    console.log('✅ Docker Compose file created successfully at:', outputFile);
 }

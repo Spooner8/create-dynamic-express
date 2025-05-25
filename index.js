@@ -7,9 +7,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { prepareProjectName, replaceBooleanPlaceholders, replacePlaceholders } from './steps/replace-placeholder.js';
-import cloneFiles from './steps/clone-files.js';
-import { removeTempFiles, removeTempFolders} from './steps/cleanup.js';
-import createNewFiles from './steps/create-files.js';
+import cloneTemplateFiles from './steps/clone-files.js';
+import cleanUp from './steps/cleanup.js';
+import createComposeFile from './steps/create-files.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -31,18 +31,16 @@ async function main() {
     answers = await replaceBooleanPlaceholders(config, answers);
     const targetDir = path.join(process.cwd(), answers['__PROJECT_NAME__']);
 
-    console.log('\n📦 Clone Template...');
+    console.log('\n📦 Clone template repository...');
     await simpleGit().clone(config.templateRepo, targetDir);
-    await fs.remove(path.join(targetDir, '.git'));
 
-    await cloneFiles(targetDir);
-    await removeTempFiles(targetDir, answers);
-    await createNewFiles(targetDir, answers);
-    await removeTempFolders(targetDir);
     await replacePlaceholders(config, targetDir, answers);
+    await cloneTemplateFiles(targetDir, answers);
+    await createComposeFile(targetDir, answers);
+    await cleanUp(targetDir, answers);
 
     console.log('\n✅ Project created in:', targetDir);
-    console.log(`\n📄 Next steps:\n  cd ${answers['__PROJECT_NAME__']} && npm install`);
+    console.log(`\n📄 Next steps:\n💻 cd ${answers['__PROJECT_NAME__']} && npm install`);
 }
 
 main().catch(err => {

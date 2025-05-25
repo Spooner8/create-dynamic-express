@@ -5,102 +5,61 @@
             "key": "__PROJECT_NAME__",
             "question": "Projectname:",
             "default": "myproject",
-            "outputType": "string",
-            "fileTargets": [
-                "package.json",
-                "README.md",
-                "nginx.conf",
-                "docker-compose.yaml"
-            ]
+            "outputType": "string"
         },
         {
             "key": "__DESCRIPTION__",
             "question": "Description:",
             "default": "Flexible Express API",
-            "outputType": "string",
-            "fileTargets": [
-                "package.json"
-            ]
+            "outputType": "string"
         },
         {
             "key": "__PORT__",
             "question": "Port (z.B. 3000):",
             "default": "3000",
-            "outputType": "number",
-            "fileTargets": [
-                ".env",
-                "api.env",
-                "nginx.conf"
-            ]
+            "outputType": "number"
         },
         {
             "key": "__DB_NAME__",
             "question": "Database name:",
             "default": "mydatabase",
-            "outputType": "string",
-            "fileTargets": [
-                ".env",
-                "db.env",
-                "api.env",
-                "docker-compose.yaml"
-            ]
+            "outputType": "string"
         },
         {
             "key": "__RBAC__",
             "question": "Activate Rolebased access controle? (yes/no):",
             "default": "no",
-            "outputType": "boolean",
-            "fileTargets": [
-                ".env",
-                "api.env"
-            ]
+            "outputType": "boolean"
         },
         {
             "key": "__GOOGLE_AUTH__",
             "question": "Activate Google Auth? (yes/no):",
             "default": "no",
-            "outputType": "boolean",
-            "fileTargets": [
-                ".env",
-                "api.env"
-            ]
+            "outputType": "boolean"
         },
         {
             "key": "__COLLECT_METRICS__",
             "question": "Activate metrics collection with prometheus/grafana? (yes/no):",
             "default": "no",
-            "outputType": "boolean",
-            "fileTargets": [
-                ".env",
-                "api.env"
-            ]
+            "outputType": "boolean"
         },
         {
             "key": "__LAAS__",
             "question": "Activate the Logger as a service? (yes/no):",
             "default": "no",
-            "outputType": "boolean",
-            "fileTargets": [
-                ".env",
-                "api.env"
-            ]
+            "outputType": "boolean"
         },
         {
             "key": "__RATE_LIMITER__",
             "question": "Activate the rate limiter? (yes/no):",
             "default": "yes",
-            "outputType": "boolean",
-            "fileTargets": [
-                ".env",
-                "api.env"
-            ]
+            "outputType": "boolean"
         },
         {
             "key": "__ESLINT__",
             "question": "Want to use ESLint? (yes/no):",
             "default": "no",
-            "outputType": "boolean",
-            "fileTargets": []
+            "outputType": "boolean"
         }
     ]
 }

@@ -1,17 +1,11 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-export async function removeTempFiles(targetDir, answers) {
-    console.log('🗑️  Remove temporary Files...');
+async function removeFiles(targetDir, answers) {
+    console.log('🗑️  Remove Files...');
     let paths = {
-        packageJsonPath: path.join(targetDir, 'package.json.template'),
-        nginxConfPath: path.join(targetDir, 'nginx.conf.template'),
-        envPath: path.join(targetDir, '.env.template'),
-        apiEnvPath: path.join(targetDir, 'api.env.template'),
-        dbEnvPath: path.join(targetDir, 'db.env.template'),
-        readmePath: path.join(targetDir, 'README.md'),
-        licensePath: path.join(targetDir, 'LICENSE'),
-        dockerComposePath: path.join(targetDir, 'docker-compose.yaml'),
+        gitPath: path.join(targetDir, '.git'),
+        licensePath: path.join(targetDir, 'LICENSE')
     };
 
     if (answers['__ESLINT__'] === 'false') {
@@ -26,11 +20,15 @@ export async function removeTempFiles(targetDir, answers) {
         if (await fs.pathExists(path)) {
             await fs.remove(path);
         }
+        console.log(`🗑️ File ${path} removed.`);
     }
+    console.log('✅ Files removed successfully.');
 }
 
-export async function removeTempFolders(targetDir) {
+async function removeTempFolders(targetDir) {
+    console.log('🗑️  Remove temporary folders...');
     const folders = [
+        'templates',
         'prisma/migrations',
         'compose'
     ]
@@ -40,5 +38,15 @@ export async function removeTempFolders(targetDir) {
         if (await fs.pathExists(folderPath)) {
             await fs.remove(folderPath);
         }
+        console.log(`🗑️ Folder ${folder} removed.`);
     }
+    console.log('✅ Temporary folders removed successfully.');
+}
+
+export default async function cleanUp(targetDir, answers) {
+    console.log('🧹 Starting cleanup...');
+
+    await removeFiles(targetDir, answers);
+    await removeTempFolders(targetDir);
+    console.log('✅ Cleanup completed successfully.');
 }

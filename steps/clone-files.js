@@ -1,41 +1,40 @@
 import path from 'path';
 import fs from 'fs-extra';
 
-export default async function cloneFiles(targetDir) {
-    console.log('🗂️  Clone Files...');
+function removeBlock(content, locationPath) {
+    const regex = new RegExp(
+        `\\s*location\\s+${locationPath}\\s*\\{[^}]*\\}`,
+        'g'
+    );
+    return content.replace(regex, '');
+}
 
-    const packageJsonTemplatePath = path.join(targetDir, 'package.json.template');
-    const packageJsonTargetPath = path.join(targetDir, 'package.json');
-    if (await fs.pathExists(packageJsonTemplatePath)) {
-        await fs.copy(packageJsonTemplatePath, packageJsonTargetPath);
-        console.log('📝 package.json wurde erstellt aus package.json.template');
-    }
+export default async function cloneTemplateFiles(targetDir, answers) {
+    console.log('🗂️ Clone Files...');
 
-    const nginxConfTemplatePath = path.join(targetDir, 'nginx.conf.template');
-    const nginxConfTargetPath = path.join(targetDir, 'nginx.conf');
-    if (await fs.pathExists(nginxConfTemplatePath)) {
-        await fs.copy(nginxConfTemplatePath, nginxConfTargetPath);
-        console.log('📝 nginx.conf wurde erstellt aus nginx.conf.template');
-    }
+    const templateDir = path.join(targetDir, 'templates');
+    const templateFiles = await fs.readdir(templateDir);
 
-    const envTemplatePath = path.join(targetDir, '.env.template');
-    const envTargetPath = path.join(targetDir, '.env');
-    if (await fs.pathExists(envTemplatePath)) {
-        await fs.copy(envTemplatePath, envTargetPath);
-        console.log('📝 .env wurde erstellt aus .env.template');
-    }
+    for (const file of templateFiles) {
+        if (file.endsWith('.template')) {
+            const sourcePath = path.join(templateDir, file);
+            const targetPath = path.join(targetDir, file.replace('.template', ''));
 
-    const apiEnvTemplatePath = path.join(targetDir, 'api.env.template');
-    const apiEnvTargetPath = path.join(targetDir, 'api.env');
-    if (await fs.pathExists(apiEnvTemplatePath)) {
-        await fs.copy(apiEnvTemplatePath, apiEnvTargetPath);
-        console.log('📝 api.env wurde erstellt aus api.env.template');
+            if (file === 'nginx.conf.template') {
+                let content = await fs.readFile(sourcePath, 'utf-8');
+                if (answers['__COLLECT_METRICS__'] !== 'true') {
+                    content = removeBlock(content, '/api/metrics');
+                }
+                if (answers['__LAAS__'] !== 'true') {
+                    content = removeBlock(content, '/api/log');
+                }
+                await fs.writeFile(sourcePath, content, 'utf-8');
+                await fs.copy(sourcePath, targetPath);
+            } else {
+                await fs.copy(sourcePath, targetPath);
+            }
+            console.log(`📄 File ${file} cloned.`);
+        }
     }
-
-    const dbEnvTemplatePath = path.join(targetDir, 'db.env.template');
-    const dbEnvTargetPath = path.join(targetDir, 'db.env');
-    if (await fs.pathExists(dbEnvTemplatePath)) {
-        await fs.copy(dbEnvTemplatePath, dbEnvTargetPath);
-        console.log('📝 db.env wurde erstellt aus db.env.template');
-    }
+    console.log('✅ Files cloned successfully.');
 }
