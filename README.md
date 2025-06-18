@@ -4,11 +4,29 @@ Easily create a new project based on the [Dynamic Express Boilerplate](https://g
 
 This CLI tool will prompt you for your project name and configuration options, then generate a ready-to-use Express.js + TypeScript project with your chosen features.
 
-## 📦 Installation
+## 📦 Installation and Usage
+First, make sure you have Node.js and npm installed on your machine. Switch to the directory where you want to create your new project.
+Then, you can install the `create-dynamic-express` CLI tool using npm:
+```bash
+npm install create-dynamic-express
+```
+Alternatively, you can use `npx` to run the tool without installing it separately:
 ```bash
 npx create-dynamic-express
 ```
-Follow the prompts to customize your project (name, description, port, database, features, etc).
+You will be asked to install the CLI tool first. Type `y` and press Enter to proceed.
+
+If you want to install it globally, you can use:
+```bash
+npm install -g create-dynamic-express
+```
+After installation, you can create a new project by running:
+```bash
+create-dynamic-express
+```
+Make sure to run this command in the directory where you want to create your new project.
+
+Now follow the prompts to customize your project (name, description, port, database, features, etc) and your done!
 
 ## 🐳 Quick Start Docker
 If you want to run your project in Docker, you can use the provided `docker-compose.yaml` file.
